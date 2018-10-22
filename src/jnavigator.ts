@@ -28,13 +28,20 @@ const jnavigator = {
           const lineNumber = parseInt(match[0], 10) - 1;
           const line = lines[lineNumber];
           if (line) {
-            const indexOfSelectedText = line.text.indexOf(quickPick.value);
-            editor.selection = new vscode.Selection(
-              line.range.start.with({ character: indexOfSelectedText }),
-              line.range.start.with({
-                character: indexOfSelectedText + quickPick.value.length
-              })
-            );
+            const indexOfText = line.text.indexOf(quickPick.value);
+            if (indexOfText >= 0) {
+              editor.selection = new vscode.Selection(
+                line.range.start.with({ character: indexOfText }),
+                line.range.start.with({
+                  character: indexOfText + quickPick.value.length
+                })
+              );
+            } else {
+              editor.selection = new vscode.Selection(
+                line.range.start,
+                line.range.end
+              );
+            }
             editor.revealRange(
               line.range,
               vscode.TextEditorRevealType.InCenterIfOutsideViewport
