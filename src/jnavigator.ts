@@ -10,23 +10,13 @@ const jnavigator = {
     const selectedText = editor.document.getText(editor.selection).trim();
 
     const lines: vscode.TextLine[] = [];
-    const lineMap = new Map<number, vscode.TextLine>();
-    const add = (line: vscode.TextLine) => {
-      lines.push(line);
-      lineMap.set(line.lineNumber, line);
-    };
     for (let i = 0; i < editor.document.lineCount; i++) {
       const line = editor.document.lineAt(i);
-      if (selectedText.length > 0) {
-        if (line.text.includes(selectedText)) {
-          add(line);
-        }
-      } else {
-        add(line);
-      }
+      lines.push(line);
     }
 
     const quickPick = vscode.window.createQuickPick();
+    quickPick.value = selectedText;
     quickPick.items = lines.map(i => ({
       label: `${i.lineNumber + 1}: ${i.text}`
     }));
@@ -35,7 +25,7 @@ const jnavigator = {
         const match = selection[0].label.match(/^(\d+):/);
         if (match) {
           const lineNumber = parseInt(match[0], 10) - 1;
-          const line = lineMap.get(lineNumber);
+          const line = lines[lineNumber];
           if (line) {
             editor.selection = new vscode.Selection(
               line.range.start,
