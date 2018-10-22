@@ -22,14 +22,18 @@ const jnavigator = {
     }));
     quickPick.onDidChangeActive(selection => {
       if (selection[0] && selection[0].label) {
-        const match = selection[0].label.match(/^(\d+):/);
+        const label = selection[0].label;
+        const match = label.match(/^(\d+):/);
         if (match) {
           const lineNumber = parseInt(match[0], 10) - 1;
           const line = lines[lineNumber];
           if (line) {
+            const indexOfSelectedText = line.text.indexOf(quickPick.value);
             editor.selection = new vscode.Selection(
-              line.range.start,
-              line.range.end
+              line.range.start.with({ character: indexOfSelectedText }),
+              line.range.start.with({
+                character: indexOfSelectedText + quickPick.value.length
+              })
             );
             editor.revealRange(
               line.range,
