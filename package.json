@@ -2,6 +2,7 @@
     "name": "jnavigator",
     "displayName": "JNavigator",
     "description": "",
+    "repository": "https://github.com/jugyo/JNavigator",
     "version": "0.0.1",
     "publisher": "jugyo",
     "engines": {
